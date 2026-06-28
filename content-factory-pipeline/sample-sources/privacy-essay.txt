@@ -1,0 +1,11 @@
+The end of third-party data, and why it is good news
+
+Third-party data is dying. Cookies are deprecating, privacy laws keep tightening, and the data brokers that most personalization quietly depends on are turning into a liability rather than an asset.
+
+We built the opposite. Our AI learns only from the live, on-site session, reading what each shopper does in the moment rather than profiling who they are from somewhere else. The result was a 36 percent average lift in revenue per session, earned with zero third-party data and zero tracking cookies.
+
+It works without any data hoard. It runs on stores doing as few as ten thousand sessions a month, and it is built to satisfy GDPR and CCPA from day one. It learns a shopper from the current visit, in under a dozen interactions, and it keeps nothing it should not.
+
+The privacy-first design came out of roughly 35 million dollars of DARPA-funded research. We measured revenue per session using first-party data only, and we averaged the lift across the whole test, so the number is conservative.
+
+The best personalization now uses no personal data at all.

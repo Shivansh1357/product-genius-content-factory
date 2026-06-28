@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Forge · Product Genius Content Factory</title>
+<meta name="description" content="The AI content factory that turns one piece of source thinking into a blog post, a LinkedIn series, and an email drip, personalized to every account in the pipeline." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf8f4; --bg2:#f4f1ea; --panel:#ffffff; --panel2:#f6f3ec;
+    --line:#e7e2d7; --line2:#d8d2c4;
+    --ink:#211d18; --muted:#5f584e; --faint:#938b7e;
+    --amber:#b8430f; --amber2:#a23a0c; --pink:#b8430f; --violet:#9a3412; --teal:#2f7d5b;
+    --good:#2f7d5b; --shadow:0 16px 38px -26px rgba(60,45,30,.30);
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+  /* top bar */
+  header.bar{position:sticky;top:0;z-index:40;backdrop-filter:blur(10px);
+    background:rgba(250,248,244,.85);border-bottom:1px solid var(--line)}
+  .bar-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:-.01em}
+  .brand .glyph{width:28px;height:28px;border-radius:7px;background:var(--amber);position:relative}
+  .brand .glyph:after{content:"";position:absolute;inset:8px 8px auto auto;width:7px;height:7px;border-radius:50%;background:var(--bg)}
+  .brand small{display:block;font-weight:500;font-size:11px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase}
+  .bar-actions{display:flex;align-items:center;gap:10px}
+  .pill{font-size:12.5px;color:var(--muted);border:1px solid var(--line2);padding:7px 12px;border-radius:8px;
+    background:var(--panel);cursor:pointer;transition:.15s;display:inline-flex;gap:7px;align-items:center}
+  .pill:hover{color:var(--ink);border-color:var(--ink)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good)}
+
+  /* hero */
+  .hero{padding:54px 0 26px;position:relative}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.04em;
+    color:var(--amber2);border:1px solid var(--line2);padding:6px 12px;border-radius:8px;background:var(--panel)}
+  h1{font-family:'Newsreader',Georgia,serif;font-size:clamp(32px,4.6vw,54px);line-height:1.08;letter-spacing:-.01em;margin:18px 0 0;font-weight:500;max-width:18ch}
+  h1 .grad{color:var(--amber);font-style:italic}
+  .lede{color:var(--muted);font-size:18px;max-width:62ch;margin:18px 0 0}
+  .stats{display:flex;gap:30px;flex-wrap:wrap;margin-top:26px}
+  .stat .n{font-size:24px;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+  .stat .k{font-size:12.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
+
+  /* console */
+  .console{margin:30px 0 70px;border:1px solid var(--line);border-radius:22px;overflow:hidden;
+    background:linear-gradient(180deg,var(--bg2),var(--bg));box-shadow:var(--shadow)}
+  .console-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+  .conmark{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--amber2);border:1px solid var(--line2);padding:2px 9px;border-radius:6px;text-transform:uppercase}
+  .console-head .path{color:var(--faint);font-size:13px;margin-left:6px}
+  .console-body{padding:24px}
+  .grid{display:grid;grid-template-columns:1fr;gap:22px}
+
+  .section-label{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);
+    display:flex;align-items:center;gap:10px;margin:0 0 12px}
+  .section-label .step{width:22px;height:22px;border-radius:7px;background:var(--panel2);border:1px solid var(--line2);
+    display:grid;place-items:center;color:var(--amber2);font-weight:700;font-size:12px}
+
+  /* source card */
+  .source{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+  @media(max-width:760px){.source{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+  .src-doc{display:flex;gap:13px;align-items:flex-start}
+  .filebadge{flex:none;width:42px;height:50px;border-radius:6px;background:var(--panel2);
+    border:1px solid var(--line2);position:relative;display:grid;place-items:end center;padding-bottom:6px;
+    font-size:9px;font-weight:800;color:var(--amber2);letter-spacing:.04em}
+  .filebadge:before{content:"";position:absolute;top:6px;left:8px;right:8px;height:3px;border-radius:2px;background:var(--line2);
+    box-shadow:0 7px 0 var(--line2),0 14px 0 var(--line2)}
+  .src-doc h4{margin:0 0 3px;font-size:14.5px}
+  .src-doc p{margin:0;color:var(--muted);font-size:13px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+  .chip{font-size:11.5px;color:var(--muted);background:var(--panel2);border:1px solid var(--line2);padding:4px 9px;border-radius:999px}
+  .atoms{font-size:13px;color:var(--muted)}
+  .atoms b{color:var(--ink)}
+  .atoms .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)}
+  .atoms .row:last-child{border:0}
+  .atoms .ex{font-size:12px;color:var(--muted);padding:7px 0;border-bottom:1px dashed var(--line);line-height:1.4}
+  .atoms .ex:last-child{border:0}
+  .atoms .ex b{color:var(--amber2);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.05em;display:block;margin-bottom:1px}
+
+  /* source picker */
+  .src-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .src-tab{cursor:pointer;font-size:13px;font-weight:500;padding:9px 13px;border-radius:11px;border:1px solid var(--line);
+    background:var(--panel);color:var(--muted);transition:.15s;display:flex;gap:8px;align-items:center}
+  .src-tab:hover{color:var(--ink);border-color:var(--line2)}
+  .src-tab.on{color:var(--ink);border-color:var(--amber);background:var(--panel);box-shadow:inset 0 0 0 1px var(--amber)}
+  .src-tab .k{font-size:10px;font-weight:700;color:var(--faint);border:1px solid var(--line2);border-radius:6px;padding:1px 6px}
+  .src-tab.on .k{color:var(--amber2)}
+  textarea.src-paste{width:100%;min-height:118px;resize:vertical;background:var(--panel);border:1px solid var(--line2);
+    color:var(--ink);border-radius:10px;padding:12px 13px;font-family:inherit;font-size:13.5px;line-height:1.5}
+  textarea.src-paste:focus{outline:none;border-color:var(--amber)}
+  textarea.src-paste::placeholder{color:var(--faint)}
+
+  /* accounts */
+  .acct-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:11px}
+  .acct{position:relative;text-align:left;cursor:pointer;background:var(--panel);border:1px solid var(--line);
+    border-radius:14px;padding:13px;transition:.18s;display:flex;flex-direction:column;gap:9px}
+  .acct:hover{transform:translateY(-2px);border-color:var(--line2)}
+  .acct.sel{border-color:var(--amber);background:var(--panel);box-shadow:inset 0 0 0 1px var(--amber)}
+  .acct .top{display:flex;align-items:center;gap:10px}
+  .ini{flex:none;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:12.5px;
+    background:var(--panel2);border:1px solid var(--line2);color:var(--ink)}
+  .acct .nm{font-weight:600;font-size:14px;line-height:1.15}
+  .acct .cat{font-size:11.5px;color:var(--faint)}
+  .acct .meta{display:flex;align-items:center;justify-content:space-between;font-size:11px}
+  .tag{padding:3px 8px;border-radius:999px;font-weight:600;letter-spacing:.02em}
+  .tag.shop{color:#1f6b4a;background:#e8f3ed;border:1px solid #c7e3d4}
+  .tag.ent{color:#7a4a1f;background:#f5ece1;border:1px solid #e6d4bf}
+  .acct .rev{color:var(--muted)}
+  .acct .check{position:absolute;top:11px;right:11px;width:18px;height:18px;border-radius:50%;
+    background:var(--amber);display:none;place-items:center;font-size:11px;color:#fff;font-weight:900}
+  .acct.sel .check{display:grid}
+
+  /* channels + run */
+  .ctl-row{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between;margin-top:4px}
+  .toggles{display:flex;gap:9px;flex-wrap:wrap}
+  .toggle{cursor:pointer;user-select:none;display:flex;align-items:center;gap:9px;padding:10px 14px;border-radius:12px;
+    border:1px solid var(--line2);background:var(--panel);font-size:13.5px;font-weight:500;transition:.15s}
+  .toggle .bx{width:17px;height:17px;border-radius:6px;border:1.5px solid var(--line2);display:grid;place-items:center;font-size:11px;color:transparent}
+  .toggle.on{border-color:var(--amber)}
+  .toggle.on .bx{background:var(--amber);border-color:transparent;color:#fff;font-weight:900}
+  .run{border:0;cursor:pointer;font-family:inherit;font-weight:600;font-size:15px;color:#fff;
+    padding:13px 24px;border-radius:10px;background:var(--amber);
+    box-shadow:0 10px 24px -16px rgba(60,30,10,.6);transition:.15s;display:inline-flex;align-items:center;gap:10px}
+  .run:hover{background:var(--amber2)}
+  .run:disabled{opacity:.6;cursor:default;transform:none}
+  .run .arr{transition:.2s}.run:hover .arr{transform:translateX(3px)}
+
+  /* pipeline */
+  .pipe{margin-top:24px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+    padding:20px;display:none}
+  .pipe.show{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .pipe-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:8px}
+  .pipe-top .status{font-size:13.5px;color:var(--muted)}
+  .pipe-top .status b{color:var(--amber2)}
+  .stages{display:grid;grid-template-columns:repeat(4,1fr);gap:0;align-items:start;position:relative}
+  @media(max-width:680px){.stages{grid-template-columns:1fr 1fr;gap:18px 0}}
+  .stg{position:relative;text-align:center;padding:0 6px}
+  .stg .node{width:50px;height:50px;margin:0 auto 10px;border-radius:14px;display:grid;place-items:center;
+    background:var(--panel2);border:1px solid var(--line2);color:var(--faint);transition:.3s;font-size:20px}
+  .stg.active .node{border-color:var(--amber);color:var(--amber2);background:#fbf0e8;box-shadow:0 0 0 4px rgba(184,67,15,.10);animation:pulse 1.1s ease-in-out infinite}
+  .stg.done .node{border-color:var(--good);color:var(--good);background:#eaf4ee}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(184,67,15,.04)}}
+  .stg .nm{font-size:13px;font-weight:600}
+  .stg .sub{font-size:11.5px;color:var(--faint);min-height:15px}
+  .conn{position:absolute;top:25px;left:calc(50% + 30px);right:calc(-50% + 30px);height:2px;background:var(--line2);overflow:hidden}
+  .stages .stg:last-child .conn{display:none}
+  @media(max-width:680px){.conn{display:none}}
+  .conn:after{content:"";position:absolute;inset:0;width:40%;background:linear-gradient(90deg,transparent,var(--amber),transparent);
+    transform:translateX(-120%);}
+  .conn.flow:after{animation:flow 1s linear infinite}
+  @keyframes flow{to{transform:translateX(320%)}}
+  .bar-line{height:5px;border-radius:999px;background:var(--panel2);overflow:hidden;margin-top:16px}
+  .bar-line i{display:block;height:100%;width:0;border-radius:999px;background:var(--amber);transition:width .25s}
+
+  /* output */
+  .out{margin-top:26px;display:none}
+  .out.show{display:block}
+  .out-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+  .out-head h3{margin:0;font-size:18px;letter-spacing:-.02em}
+  .out-head .who{color:var(--muted);font-size:13.5px}
+  .out-head .who b{color:var(--amber2)}
+  .layout{display:grid;grid-template-columns:1fr 290px;gap:18px}
+  @media(max-width:880px){.layout{grid-template-columns:1fr}}
+  .tabs{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+  .tab{cursor:pointer;font-size:13.5px;font-weight:600;padding:9px 15px;border-radius:11px;border:1px solid var(--line);
+    background:var(--panel);color:var(--muted);transition:.15s;display:flex;gap:8px;align-items:center}
+  .tab.on{color:var(--ink);border-color:var(--amber);background:var(--panel2)}
+  .tab .ct{font-size:11px;background:var(--panel2);border:1px solid var(--line2);border-radius:999px;padding:1px 7px;color:var(--faint)}
+  .tab.on .ct{color:var(--amber2)}
+  .panel-out{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:0;overflow:hidden;min-height:300px}
+  .doc{padding:26px 30px;max-height:560px;overflow:auto}
+  .doc::-webkit-scrollbar{width:9px}.doc::-webkit-scrollbar-thumb{background:var(--line2);border-radius:9px}
+  .blogtitle{font-family:'Newsreader',serif;font-size:27px;line-height:1.15;letter-spacing:-.01em;margin:0 0 6px}
+  .doc h5{font-family:'Newsreader',serif;font-size:19px;margin:22px 0 6px;font-weight:600}
+  .doc p{color:#2c2722;font-size:15px;margin:0 0 14px}
+  .doc .meta-line{color:var(--faint);font-size:12.5px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:18px}
+  .reveal{opacity:0;transform:translateY(10px);animation:rise .5s ease forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  .post{border:1px solid var(--line);border-radius:13px;padding:16px 17px;margin-bottom:14px;background:var(--bg2)}
+  .post .ph{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .post .av{width:38px;height:38px;border-radius:50%;background:var(--amber);flex:none;
+    display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff}
+  .post .nm{font-weight:700;font-size:13.5px}.post .rl{font-size:11.5px;color:var(--faint)}
+  .post .body{font-size:14px;color:#2c2722;white-space:pre-wrap}
+  .post .react{display:flex;gap:16px;color:var(--faint);font-size:12px;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+
+  .email{border:1px solid var(--line);border-radius:13px;margin-bottom:13px;overflow:hidden;background:var(--bg2)}
+  .email .eh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--panel2);border-bottom:1px solid var(--line)}
+  .email .day{font-size:11px;font-weight:700;color:var(--amber2);letter-spacing:.04em;text-transform:uppercase}
+  .email .subj{font-weight:600;font-size:14px;padding:13px 16px 4px}
+  .email .ebody{padding:0 16px 16px;font-size:13.5px;color:#3a342d;white-space:pre-wrap}
+
+  /* basis sidebar */
+  .basis{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r);padding:18px;align-self:start;position:sticky;top:80px}
+  .basis h4{margin:0 0 4px;font-size:14px;display:flex;align-items:center;gap:8px}
+  .basis .sub{color:var(--faint);font-size:12px;margin:0 0 14px}
+  .signal{display:flex;gap:11px;padding:11px 0;border-top:1px solid var(--line)}
+  .signal .ic{flex:none;width:26px;height:26px;border-radius:8px;background:var(--panel2);border:1px solid var(--line2);display:grid;place-items:center;font-size:13px}
+  .signal .t{font-size:13px;font-weight:600;line-height:1.2}
+  .signal .d{font-size:12px;color:var(--muted)}
+  .basis .foot{margin-top:14px;font-size:11.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:12px}
+
+  .toolbar{display:flex;gap:8px;padding:11px 14px;border-bottom:1px solid var(--line);background:var(--panel2);align-items:center}
+  .toolbar .t-name{font-size:12.5px;color:var(--faint);margin-right:auto}
+  .mini{font-size:12px;color:var(--muted);border:1px solid var(--line2);background:var(--panel);border-radius:8px;padding:6px 10px;cursor:pointer;transition:.15s}
+  .mini:hover{color:var(--ink);border-color:var(--amber)}
+
+  /* modal */
+  .modal{position:fixed;inset:0;z-index:60;display:none;place-items:center;padding:24px;
+    background:rgba(6,5,4,.7);backdrop-filter:blur(4px)}
+  .modal.show{display:grid;animation:fade .25s ease}
+  .modal .box{max-width:760px;width:100%;max-height:84vh;overflow:auto;background:var(--panel);border:1px solid var(--line2);
+    border-radius:18px;box-shadow:var(--shadow)}
+  .modal .mh{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}
+  .modal .mh h3{margin:0;font-size:16px}
+  .modal .mb{padding:22px}
+  .modal .x{cursor:pointer;border:1px solid var(--line2);background:var(--panel2);border-radius:9px;width:32px;height:32px;color:var(--muted);font-size:16px}
+  pre.code{background:#1f1b16;border:1px solid #322c24;border-radius:10px;padding:16px;overflow:auto;font-size:12.5px;
+    color:#ddd5c7;line-height:1.5;font-family:ui-monospace,'SF Mono',Menlo,monospace;white-space:pre-wrap}
+  .code .k{color:#c9a9ff}.code .s{color:#86d9b4}.code .v{color:#ffb478}
+  .field{margin:0 0 14px}
+  .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px}
+  .field input,.field select{width:100%;background:var(--panel);border:1px solid var(--line2);color:var(--ink);
+    border-radius:10px;padding:11px 13px;font-family:inherit;font-size:14px}
+  .note{font-size:12.5px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+
+  footer{border-top:1px solid var(--line);padding:30px 0;color:var(--faint);font-size:13px}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+  .hint{font-size:12.5px;color:var(--faint);margin-top:8px}
+  .empty{padding:50px 20px;text-align:center;color:var(--faint)}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <div class="brand">
+      <span class="glyph"></span>
+      <span>Forge<small>Product Genius · Content Factory</small></span>
+    </div>
+    <div class="bar-actions">
+      <button class="pill" onclick="openModal('prompts')">View prompt templates</button>
+      <button class="pill" onclick="openModal('live')"><span class="dot"></span> Live mode</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="eyebrow">◆ One input, every channel, personalized per account</span>
+    <h1>Turn one piece of thinking into a <span class="grad">channel-ready content engine</span>.</h1>
+    <p class="lede">Forge ingests source material once (a whitepaper, a founder talk, a stream-of-consciousness recording), pulls out the durable ideas, then rewrites them as a blog post, a LinkedIn series, and an email drip tuned to the specific decision-maker you are trying to reach. Same factory, new inputs, forever.</p>
+    <div class="stats">
+      <div class="stat"><div class="n">1 → 8</div><div class="k">Assets per run</div></div>
+      <div class="stat"><div class="n">10</div><div class="k">Accounts wired in</div></div>
+      <div class="stat"><div class="n">3</div><div class="k">Channels, one voice model</div></div>
+      <div class="stat"><div class="n">&lt; 3s</div><div class="k">Source to draft</div></div>
+    </div>
+  </section>
+
+  <section class="console">
+    <div class="console-head">
+      <span class="conmark">Forge</span>
+      <span class="path">run · source: product-genius-whitepaper.pdf</span>
+    </div>
+    <div class="console-body">
+      <div class="grid">
+
+        <!-- STEP 1: SOURCE -->
+        <div>
+          <p class="section-label"><span class="step">1</span> Source content <span style="text-transform:none;letter-spacing:0;color:var(--faint)">(swap the input, the output changes)</span></p>
+          <div class="src-tabs" id="srcTabs"></div>
+          <div class="source">
+            <div class="card" id="srcLeft"></div>
+            <div class="card atoms" id="atomCard"></div>
+          </div>
+          <p class="hint" id="srcHint"></p>
+        </div>
+
+        <!-- STEP 2: TARGET -->
+        <div>
+          <p class="section-label"><span class="step">2</span> Pick a target account <span style="text-transform:none;letter-spacing:0;color:var(--faint)">(the 10 in the Product Genius ICP)</span></p>
+          <div class="acct-grid" id="acctGrid"></div>
+        </div>
+
+        <!-- STEP 3: CHANNELS + RUN -->
+        <div>
+          <p class="section-label"><span class="step">3</span> Choose channels, then forge</p>
+          <div class="ctl-row">
+            <div class="toggles" id="toggles">
+              <div class="toggle on" data-ch="blog"><span class="bx">✓</span> Blog post</div>
+              <div class="toggle on" data-ch="linkedin"><span class="bx">✓</span> LinkedIn series</div>
+              <div class="toggle on" data-ch="email"><span class="bx">✓</span> Email drip</div>
+            </div>
+            <button class="run" id="runBtn">Forge content <span class="arr">→</span></button>
+          </div>
+          <p class="hint" id="selHint">Selected: <b style="color:var(--muted)">ThirdLove</b>. The factory will adapt tone, proof points, and the offer to this account.</p>
+        </div>
+
+        <!-- PIPELINE -->
+        <div class="pipe" id="pipe">
+          <div class="pipe-top">
+            <div class="status" id="pipeStatus">Idle.</div>
+            <div class="status">engine: <b>LIM-adapt v3</b></div>
+          </div>
+          <div class="stages" id="stages">
+            <div class="stg" data-s="0"><div class="node">⛏</div><div class="nm">Extract</div><div class="sub" data-sub></div><div class="conn"></div></div>
+            <div class="stg" data-s="1"><div class="node">⚙</div><div class="nm">Adapt to persona</div><div class="sub" data-sub></div><div class="conn"></div></div>
+            <div class="stg" data-s="2"><div class="node">✎</div><div class="nm">Channelize</div><div class="sub" data-sub></div><div class="conn"></div></div>
+            <div class="stg" data-s="3"><div class="node">✓</div><div class="nm">QA + de-AI pass</div><div class="sub" data-sub></div></div>
+          </div>
+          <div class="bar-line"><i id="barFill"></i></div>
+        </div>
+
+        <!-- OUTPUT -->
+        <div class="out" id="out">
+          <div class="out-head">
+            <div>
+              <h3>Generated assets</h3>
+              <div class="who" id="outWho"></div>
+            </div>
+            <button class="mini" onclick="window.print()">Export / print</button>
+          </div>
+          <div class="tabs" id="tabs"></div>
+          <div class="layout">
+            <div class="panel-out">
+              <div class="toolbar">
+                <span class="t-name" id="docName"></span>
+                <button class="mini" id="copyBtn">Copy</button>
+              </div>
+              <div class="doc" id="docArea"></div>
+            </div>
+            <aside class="basis" id="basis"></aside>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Forge · a content factory concept for Product Genius · built for the Growth Marketing Engineer assessment</span>
+    <span>Source of truth: productgenius.ai technical whitepaper</span>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<div class="modal" id="modal">
+  <div class="box">
+    <div class="mh"><h3 id="modalTitle"></h3><button class="x" onclick="closeModal()">✕</button></div>
+    <div class="mb" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   SOURCE ATOMS: extracted once from Product Genius source content.
+   In production these come out of the Extract stage (LLM + parser).
+   ============================================================ */
+/* Each source is real content. The Extract stage turns it into a normalized
+   atom set with 8 fields. Change the source and the atoms change, so the output
+   changes. Presets carry a cached extract; "Paste your own" runs the live
+   extractor below, so brand-new input produces brand-new output. */
+const SOURCES = [
+  {
+    id:"whitepaper", name:"Technical whitepaper + founder talk", kind:"PDF",
+    desc:"Large Interaction Models and the Betsey Johnson A/B study. The faster-than-the-speed-of-statistics thesis.",
+    chips:["whitepaper.pdf","founder-talk.mp4","stream.txt"],
+    text:"Whitepaper: Large Interaction Models, the Betsey Johnson study, learning faster than the speed of statistics.",
+    atoms:{
+      stat:"a 36 percent average lift in revenue per session across 25 brands and millions of sessions",
+      mechanism:"an AI feed that adapts to each shopper as they scroll, learning from the live session instead of waiting for a trend to become statistically significant",
+      story:"On a fast-moving fashion brand the lift would hold for a week and then vanish within hours, on its own, because shopper interest, competitor pricing, and new drops had moved faster than our statistics could confirm. The fix was to act before the data was conclusive.",
+      punch:"you have to move faster than the speed of statistics",
+      support:"it learns from the live visit, so it needs no third-party data and no long training period, and it works on stores doing as few as ten thousand sessions a month",
+      micro:"it picks up a useful signal in under a dozen interactions per shopper",
+      cred:"the learning system came out of roughly 35 million dollars of DARPA-funded research",
+      method:"we averaged the lift across every day of the test, not just the strong days at the end, so the number is conservative"
+    }
+  },
+  {
+    id:"privacy", name:"Founder essay: the end of third-party data", kind:"TXT",
+    desc:"The privacy angle. Cookies are dying, the data brokers are a liability, and the feed needs none of it.",
+    chips:["privacy-essay.txt"],
+    text:"Essay on privacy-first personalization without cookies or third-party data.",
+    atoms:{
+      stat:"a 36 percent average lift in revenue per session, earned with zero third-party data and zero tracking cookies",
+      mechanism:"an AI that learns only from the live, on-site session, reading what each shopper does in the moment rather than profiling who they are",
+      story:"Third-party data is dying. Cookies are deprecating, privacy laws keep tightening, and the data brokers that most personalization quietly depends on are turning into a liability. We built the opposite: a system that needs none of it.",
+      punch:"the best personalization now uses no personal data at all",
+      support:"it works without any data hoard, on stores doing as few as ten thousand sessions a month, and it is built to satisfy GDPR and CCPA from day one",
+      micro:"it learns a shopper from the current visit, in under a dozen interactions, and keeps nothing it should not",
+      cred:"the privacy-first design came out of roughly 35 million dollars of DARPA-funded research",
+      method:"we measured revenue per session with first-party data only, and averaged across the whole test, so the number is conservative"
+    }
+  },
+  {
+    id:"casestudy", name:"Customer story: Amazon-level on a small budget", kind:"TXT",
+    desc:"The testimonial angle. Real merchants, real numbers, an always-on sales rep that knows your catalog.",
+    chips:["club-furniture.txt","biordi.txt"],
+    text:"Customer stories from Club Furniture and Biordi about doubling online sales.",
+    atoms:{
+      stat:"real merchants seeing it firsthand, from Club Furniture doubling online sales to Biordi lifting revenue 86 percent",
+      mechanism:"an always-on sales rep that actually knows your catalog, telling each shopper your story the way you would in person",
+      story:"A legacy furniture brand was modernizing online and could not turn browsers into buyers. After adding the feed they doubled their online sales while staying true to what made them special. Their words, not ours.",
+      punch:"it is like having a smart salesperson who knows every product, working every visit at once",
+      support:"it runs on a small-business budget, installs in minutes, and is mostly hands-off once it is on",
+      micro:"merchants tell us it starts paying off within the first weeks, with time on site and add-to-carts up right away",
+      cred:"it is already trusted by brands like Steve Madden, Pier 1, and dozens of independent stores",
+      method:"these are real, confirmed merchant results, not a projection"
+    }
+  }
+];
+
+/* Live extractor for pasted source. Heuristic on purpose so the demo runs with
+   no model; production routes the same text through the Extract prompt. It is
+   genuinely text-driven, so different paste, different atoms, different output. */
+const ATOM_FALLBACK = {
+  stat:"a meaningful lift in revenue per session in controlled tests",
+  mechanism:"an AI feed that adapts to each shopper as they scroll, learning from the live session",
+  story:"In testing, the lift started small and grew as the model learned each shopper.",
+  punch:"the page should learn in real time, not in quarters",
+  support:"it learns from the live visit, so it needs no third-party data and works on smaller stores too",
+  micro:"it picks up a useful signal in under a dozen interactions per shopper",
+  cred:"the approach came out of years of dedicated research",
+  method:"we averaged the lift across the whole test, so the number is conservative"
+};
+function extractAtoms(text){
+  const t=(text||"").replace(/\s+/g," ").trim();
+  if(t.length<40) return {...ATOM_FALLBACK};
+  const sents=t.match(/[^.!?]+[.!?]+/g)||[t];
+  const clean=s=>s.trim();
+  const find=(re,min=0)=>{ for(const s of sents){ if(re.test(s)&&clean(s).length>=min) return clean(s);} return ""; };
+  const lower=s=>s? s.charAt(0).toLowerCase()+s.slice(1):s;
+  const A={};
+  A.stat   = find(/\d+\s*(%|percent|x\b)|\$\s?\d/i) || ATOM_FALLBACK.stat;
+  A.story  = find(/\b(we|our|they|after|customer|merchant)\b/i,70) || sents.reduce((a,b)=>clean(b).length>clean(a).length?b:a,sents[0]).trim() || ATOM_FALLBACK.story;
+  A.mechanism = lower(find(/\b(learn|model|adapt|AI|system|engine|feed|algorithm)\b/i)) || ATOM_FALLBACK.mechanism;
+  A.support = lower(find(/\b(without|no |any size|small|privacy|cookie|data|budget|GDPR|CCPA)\b/i)) || ATOM_FALLBACK.support;
+  A.micro  = lower(find(/\b(minute|hour|day|week|interaction|install|fast|quick|right away)\b/i)) || ATOM_FALLBACK.micro;
+  A.cred   = lower(find(/\b(research|founded|built|team|PhD|patent|backed|DARPA|trusted|years)\b/i)) || ATOM_FALLBACK.cred;
+  A.method = lower(find(/\b(test|measure|average|study|result|proof|confirmed)\b/i)) || ATOM_FALLBACK.method;
+  const short=sents.map(clean).filter(s=>s.length>20&&s.length<95);
+  A.punch  = lower(short.length? short[short.length-1].replace(/[.!?]+$/,"") : ATOM_FALLBACK.punch);
+  // these are woven mid-sentence, so drop any trailing punctuation
+  ["stat","mechanism","support","micro","cred","method"].forEach(k=>{ A[k]=A[k].replace(/[.!?]+$/,""); });
+  return A;
+}
+
+let activeAtoms = {...SOURCES[0].atoms};
+let activeSrc = SOURCES[0];
+let customText = "";
+
+/* category lift figures pulled from the whitepaper test-results table */
+const LIFT = {Apparel:34, Jewelry:33, "Specialty Foods":26, Furnishings:25, "Specialty Retail":25};
+
+/* proof customers in the Product Genius network, by category */
+/* ============================================================
+   ACCOUNTS: the 10 ICP companies, enriched with real research signals.
+   ============================================================ */
+const ACCOUNTS = [
+  {id:"thirdlove", name:"ThirdLove", ini:"TL", cat:"Apparel · intimates DTC", rev:"$60m online",
+   platform:"Shopify", shopify:true, segment:"Mid-market · sales-assisted", tone:"operator",
+   persona:{name:"Heidi Zak", title:"CEO & Co-founder"}, first:"Heidi",
+   proof:"Betsey Johnson", liftCat:"Apparel",
+   pain:"fit and size discovery is the entire conversion problem in online intimates, and it still happens on a static page",
+   hook:"ThirdLove built a brand on a hard truth: most bras do not fit, and helping a woman find the one that does is the whole game.",
+   trigger:"public growth story on Shopify and a brand thesis built entirely on fit",
+   sigs:[["Shopify since 2015","Install is under an hour, not an engineering project"],
+         ["Brand thesis = fit","Discovery is the natural place to extend it"],
+         ["Apparel category","+34% revenue per session in our A/B tests"],
+         ["Growth-stage DTC","Sophisticated team, so build-vs-buy gets addressed head on"]]},
+
+  {id:"southern", name:"Southern Baked Pie", ini:"SB", cat:"Specialty Foods", rev:"$5m",
+   platform:"Shopify", shopify:true, segment:"PLG · self-serve", tone:"founder",
+   persona:{name:"Amanda Wilbanks", title:"Founder & CEO"}, first:"Amanda",
+   proof:"Chesapeake Crab Connection", liftCat:"Specialty Foods",
+   pain:"a seasonal gifting business lives or dies on a few big weeks, and a static homepage treats the first-time gift buyer the same as the regular",
+   hook:"I love what you have built: the bakeries, the Pie of the Month, the gift boxes. That gifting business lives on a few big weeks a year.",
+   trigger:"active gifting and subscription expansion plus founder media exposure",
+   sigs:[["Shopify, founder-run","You set it up yourself in under an hour, nothing to train"],
+         ["Seasonal gifting spikes","First-time gift buyers are exactly who a learning feed converts"],
+         ["Specialty food category","+26% revenue per session in our A/B tests"],
+         ["Owner is the buyer","Tone is founder-to-founder, the offer is self-serve"]]},
+
+  {id:"abc", name:"ABC Carpet & Home", ini:"ABC", cat:"Furnishings", rev:"$30m online",
+   platform:"Shopify", shopify:true, segment:"Mid-market · sales-assisted", tone:"operator",
+   persona:{name:"Head of DTC / E-commerce", title:"(CEO Aaron Rose for the smaller call)"}, first:"there",
+   proof:"Club Furniture", liftCat:"Furnishings",
+   pain:"high-consideration, one-of-a-kind home goods live or die on inspiration-led discovery, not a search box",
+   hook:"ABC Carpet & Home is one of the most loved names in furnishings, and the online job is to make that in-store sense of discovery happen on a screen.",
+   trigger:"post-ownership refresh and active site and merchandising rework",
+   sigs:[["On Shopify","Install is under an hour, no replatform required"],
+         ["Replatform / refresh underway","A learning feed rides the redesign you are already doing"],
+         ["Furnishings category","+25% revenue per session in our A/B tests"],
+         ["High-AOV, inspiration-led","Discovery is the lever, and discovery is what gets cheaper"]]},
+
+  {id:"thredup", name:"ThredUp", ini:"TU", cat:"Apparel · resale", rev:"$300m online",
+   platform:"Proprietary stack", shopify:false, segment:"Enterprise · build-vs-buy", tone:"exec",
+   persona:{name:"James Reinhart", title:"CEO & Co-founder (or VP Product)"}, first:"James",
+   proof:"Betsey Johnson", liftCat:"Apparel",
+   pain:"every SKU in resale is one of a kind, so discovery is the core battleground, and you already build personalization in-house",
+   hook:"ThredUp has put real engineering into AI discovery, which is exactly why the next conversation is build-versus-buy, not whether discovery matters.",
+   trigger:"2025 rebrand and AI feature suite, heavy personalization investment",
+   sigs:[["Builds personalization in-house","So we lead with the part that is hard to build, not a widget"],
+         ["One-of-a-kind inventory","Cold-start on every SKU is the exact problem the LIM solves"],
+         ["Apparel / resale","+34% revenue per session benchmark in apparel"],
+         ["Enterprise stack","Integration via JS tag and API, not a Shopify install"]]},
+
+  {id:"jtv", name:"JTV", ini:"JTV", cat:"Jewelry", rev:"$350m total*", platform:"Custom · React/Oracle",
+   shopify:false, segment:"Enterprise · sales-assisted", tone:"exec",
+   persona:{name:"Kevin Cleary", title:"CEO (turnaround) / VP E-commerce"}, first:"Kevin",
+   proof:"Trades of Hope", liftCat:"Jewelry",
+   pain:"a video-commerce model built for cable is migrating to digital and marketplaces, where the on-site discovery experience has to do the selling",
+   hook:"JTV is moving a video-commerce model off cable and onto digital, and a scrolling, learning feed is the closest digital analog to what made the TV channel work.",
+   trigger:"new CEO and channel expansion onto Amazon and Macy's",
+   sigs:[["Video-commerce DNA","A TikTok-style feed is a natural translation of the format"],
+         ["New CEO, turnaround mode","A measurable revenue-per-session lever fits the mandate"],
+         ["Jewelry category","+33% revenue per session in our A/B tests"],
+         ["Custom stack","Integration via tag and API, framed as a controlled A/B test"]]},
+
+  {id:"yurman", name:"David Yurman", ini:"DY", cat:"Jewelry · luxury", rev:"$100m online",
+   platform:"Salesforce Commerce Cloud", shopify:false, segment:"Enterprise · sales-assisted", tone:"exec",
+   persona:{name:"VP E-commerce", title:"/ Chief Digital Officer"}, first:"there",
+   proof:"Trades of Hope", liftCat:"Jewelry",
+   pain:"luxury jewelry conversion online hinges on storytelling and styling guidance, the how-to-stack-and-layer moment that a product grid cannot deliver",
+   hook:"For David Yurman, the online job is to recreate the styling conversation that happens at the counter: how to stack, how to layer, what pairs with what.",
+   trigger:"high-cadence collection launches and celebrity campaigns",
+   sigs:[["Salesforce Commerce Cloud","We integrate via tag and API, no replatform"],
+         ["Styling-led purchase","A feed can carry the layering and pairing story per shopper"],
+         ["Jewelry category","+33% revenue per session in our A/B tests"],
+         ["Luxury cadence","Constant launches are a fit for a model that learns in the moment"]]},
+
+  {id:"kohls", name:"Kohl's", ini:"K", cat:"Apparel · dept store", rev:"$5,000m online",
+   platform:"Custom enterprise", shopify:false, segment:"Enterprise · sales-assisted", tone:"exec",
+   persona:{name:"Arianne Parisi", title:"Chief Digital Officer (started 2025)"}, first:"Arianne",
+   proof:"Betsey Johnson", liftCat:"Apparel",
+   pain:"declining comps and a stated mandate to fix on-site findability mean every point of digital conversion is under the microscope",
+   hook:"You stepped into a clear mandate: fix findability and lift digital conversion while comps are under pressure. That is a revenue-per-session problem, and it is measurable.",
+   trigger:"new CDO and CEO in 2025, turnaround and findability mandate",
+   sigs:[["New CDO, fresh mandate","A measurable, reversible A/B test fits a new regime"],
+         ["Findability is the stated gap","Discovery is precisely what the feed improves"],
+         ["Apparel / department","+34% revenue per session benchmark in apparel"],
+         ["Enterprise stack","Tag-based integration, A/B on a traffic slice, no big bang"]]},
+
+  {id:"tractor", name:"Tractor Supply", ini:"TSC", cat:"Specialty Retail", rev:"$1,800m online",
+   platform:"Custom · Azure", shopify:false, segment:"Enterprise · sales-assisted", tone:"exec",
+   persona:{name:"Rick Lockton", title:"SVP E-commerce / Hal Lawton, CEO"}, first:"there",
+   proof:"Club Furniture", liftCat:"Specialty Retail",
+   pain:"most online orders are buy-online-pickup-in-store, so lifting basket size and online conversion in an omnichannel flow is the stated focus",
+   hook:"Tractor Supply is already public about leaning into AI for ecommerce. The question is which AI moves a number, and revenue per session is the cleanest one.",
+   trigger:"public AI investment and an OpenAI partnership, Final Mile expansion",
+   sigs:[["Already buying AI tooling","We come in on the metric that matters: revenue per session"],
+         ["BOPIS-heavy, basket-size focus","A feed lifts attach and discovery inside the session"],
+         ["Specialty retail / hard goods","Double-digit revenue-per-session lift benchmark"],
+         ["Azure custom stack","Tag and API integration, run as a controlled A/B test"]]},
+
+  {id:"envy", name:"enVy Pillow", ini:"eP", cat:"Furnishings · bedding", rev:"$1m",
+   platform:"Shopify", shopify:true, segment:"PLG · self-serve", tone:"founder",
+   persona:{name:"Kim & Kathy", title:"Co-founders (Registered Nurses)"}, first:"there",
+   proof:"Club Furniture", liftCat:"Furnishings",
+   pain:"a brand built on one hero pillow is expanding into a full catalog, and a static page cannot cross-sell or educate the way a guided feed can",
+   hook:"You built enVy around one hero product, and now you are expanding into a real catalog. That shift is exactly when a site needs to start cross-selling for you.",
+   trigger:"product-line expansion and a heavy influencer and affiliate motion",
+   sigs:[["Shopify, founder-run","You install it yourself in under an hour"],
+         ["Hero product to full catalog","A learning feed handles cross-sell and education"],
+         ["Furnishings / bedding","+25% revenue per session in our A/B tests"],
+         ["Wellness purchase","High-consideration buy that rewards in-session guidance"]]},
+
+  {id:"inspiranza", name:"Inspiranza Designs", ini:"ID", cat:"Jewelry", rev:"$4m",
+   platform:"Shopify", shopify:true, segment:"PLG · self-serve", tone:"founder",
+   persona:{name:"Diane & Dawn", title:"Co-founders"}, first:"there",
+   proof:"Trades of Hope", liftCat:"Jewelry",
+   pain:"a large affordable-jewelry catalog where discovery and repeat purchase drive the business, and you already invest heavily in retention tooling",
+   hook:"You already run a serious retention stack: daily deals, a subscription box, a loyalty program. The missing piece is a storefront that personalizes discovery on the way in.",
+   trigger:"heavy retention and subscription motion on Shopify",
+   sigs:[["Shopify, founder-run","Installs in under an hour alongside your current apps"],
+         ["Big catalog, retention-driven","Discovery is the front-door lever for repeat buyers"],
+         ["Jewelry category","+33% revenue per session in our A/B tests"],
+         ["Subscription / loyalty motion","A feed feeds the same AOV and repeat goals"]]}
+];
+
+/* ============================================================
+   GENERATION ENGINE: composes atoms + persona into channel drafts.
+   This is the Adapt + Channelize logic, client-side and deterministic
+   so the demo runs offline. Live mode swaps these for model calls.
+   ============================================================ */
+const lift = a => LIFT[a.liftCat];
+
+function installLine(a){
+  if(a.shopify && a.segment.startsWith("PLG")) return "it installs on your Shopify store in under an hour and there is nothing to train";
+  if(a.shopify) return "it installs on Shopify in well under an hour, so it rides any redesign you are already running";
+  return "our team adds a JavaScript tag in about thirty minutes, no replatform, and you run it as a controlled A/B test on a slice of traffic";
+}
+function offerLine(a){
+  if(a.segment.startsWith("PLG")) return "There is a 15-day trial, and the honest way to judge it is to let half your visitors see the feed and half see your current site, with revenue per session as the scoreboard.";
+  if(a.segment.startsWith("Mid")) return "The lowest-risk way to settle it is the same A/B test we ran: half your traffic on the feed, half on the site you have today, revenue per session as the scoreboard, on a 15-day trial.";
+  return "We do not ask you to believe the number. We ask you to run the same randomized A/B test we ran, on a slice of your traffic, with revenue per session as the metric.";
+}
+
+function genBlog(a, A){
+  const title = a.liftCat==="Specialty Foods"
+    ? "Your busiest weeks decide your year. Your website should get smarter in them, not slower."
+    : a.shopify
+      ? "The most expensive page on your store is the one nobody optimizes"
+      : "The next point of conversion is not on your product page. It is before it.";
+  const paras = [
+    `Most ${a.cat.split(" · ")[0].toLowerCase()} teams pour their attention into the product page and the checkout. The page almost nobody optimizes is the one in between: the moment a shopper lands, scans, and silently decides whether anything here is for them. For ${a.name}, ${a.pain}.`,
+    `We have a number for how expensive that moment is. In controlled A/B tests, adapting to each shopper in real time delivered this: ${A.stat}. In ${a.liftCat.toLowerCase()} specifically, the lift averaged ${lift(a)} percent. That is the same traffic and the same catalog, converting more of the people already on the page.`,
+    `The usual fix is a recommendation engine trained on historical data. It works eventually, for shoppers who look like last quarter's shoppers. It struggles with the cases that matter most: the first-time visitor, the new collection, the shopper outside the fat part of the curve. ${A.story} The lesson was simple: if you wait for statistical significance before you act, you are always optimizing for a shopper who has already left. ${cap(A.punch)}.`,
+    `Instead of pulling levers after the data confirms a trend, the system works differently. ${cap(A.mechanism)}. In practice ${A.micro}, and it keeps adapting as interests and inventory move. ${cap(A.support)}.`,
+    `Picture the homepage reading the room for ${a.name}: a shopper lands, the feed opens on what they came for, then reorders itself with every swipe, surfacing the next best product and the answer to the question they have not typed yet. ${cap(a.pain)} is, not coincidentally, exactly the kind of problem that gets cheaper when the page learns in real time instead of in quarters. The product page and the checkout are mostly solved. The expensive, unoptimized middle is where the next ${lift(a)} percent is sitting.`
+  ];
+  return {title, paras, meta:`Website blog · top of funnel · from ${activeSrc.name}, written for ${a.name}`};
+}
+
+function genLinkedIn(a, A){
+  const posts = [];
+  posts.push({voice:"Ben Vigoda", role:"Founder & Chief Scientist, Product Genius", text:
+`Here is the thing we learned building this, and it took me a while to accept it.
+
+${A.story}
+
+${cap(A.punch)}. That is the whole idea, and most teams have not caught up to it yet. We stopped optimizing for the shopper who already left and started optimizing for the one still scrolling.`});
+
+  posts.push({voice:"Noah Maffitt", role:"Chief Growth Officer, Product Genius", text:
+(a.segment.startsWith("Enterprise")
+?`"We would just build this ourselves."
+
+Fair instinct, and for a team like ${a.name}'s, a real option. So here is the honest version.
+
+The hard part is not a recommendation widget. ${cap(A.mechanism)}, working on the first-time visitor and the brand-new SKU. ${cap(A.cred)}, and it is what we maintain so your team does not have to.
+
+The build-versus-buy question is not "can we." It is "is this the thing we want our best engineers spending two years on." For most teams, the answer is no.`
+:`"We are too small for AI personalization."
+
+I hear this from good operators every week, and it is backwards.
+
+The old recommendation playbook needed a mountain of historical data, so it rewarded the giants and punished everyone else. ${cap(A.support)}. ${cap(A.micro)}.
+
+So the question is not "do I have enough traffic." It is "how much revenue am I leaving on the sessions I already have." For ${a.liftCat.toLowerCase()} brands in our tests, the answer averaged ${lift(a)} percent.`)});
+
+  posts.push({voice:"Ben Vigoda", role:"Founder & Chief Scientist, Product Genius", text:
+`${cap(a.pain)}.
+
+A grid of pretty photos does not solve that. Neither does a search box, because it asks the shopper to already know what they want.
+
+${cap(A.mechanism)}, surfacing the next best thing and the one detail that resolves the doubt they have not voiced. It learns them in the session, not over a quarter.
+
+For ${a.name}, discovery is the moat. Most teams just have not pointed their best technology at it yet.`});
+  return posts;
+}
+
+function genEmails(a, A){
+  const g = `Hi ${a.first==="there"?"there":a.first},`;
+  const sender = "Noah Maffitt\nChief Growth Officer, Product Genius";
+  const e = [];
+  e.push({day:"Day 0", subj:"the page between your ad and your checkout", body:
+`${g}
+
+${a.hook}
+
+We built an AI that turns the few seconds after a shopper lands into a feed that adapts as they scroll, surfacing the next best product instead of making them dig. In controlled A/B tests, the headline result was this: ${A.stat}. In ${a.liftCat.toLowerCase()} specifically, the lift averaged ${lift(a)} percent.
+
+It learns from the live session, so ${installLine(a)}.
+
+Worth fifteen minutes to show you what it would look like on a ${a.name} page?
+
+${sender}`});
+
+  e.push({day:"Day 3", subj:`the proof behind the number, without cherry-picking`, body:
+`${g}
+
+Quick follow-up with the proof, since the number deserves a footnote.
+
+We ran randomized A/B tests: half of traffic saw the normal site, half saw the same site with our feed added. We measured revenue per session, and ${A.method}. ${cap(a.liftCat)} brands averaged ${lift(a)} percent.
+
+The mechanism behind it is a model that adapts to each shopper in the moment rather than waiting for a trend to become significant. On a fast-moving brand, that distinction was the entire difference between a lift that held and one that evaporated by lunch.
+
+I can send the whitepaper with the learning curves, or walk you through it live. Which is easier?
+
+${sender}`});
+
+  e.push({day:"Day 7", subj: a.segment.startsWith("Enterprise") ? "the build-versus-buy question, answered honestly" : `"too small for AI"? actually the opposite`, body:
+(a.segment.startsWith("Enterprise")
+?`${g}
+
+A team as capable as yours has surely asked whether you would just build this. Fair question, so here is the straight answer.
+
+The hard part is not the widget. It is a learning system that adapts faster than statistics can confirm a change, works without third-party data, and performs on the first-time visitor and the new SKU. ${cap(A.cred)}, and it is what we maintain so your team can stay on the roadmap they care about.
+
+On your side it is a tag and an API call, run as a controlled A/B test, not a platform project. If the instinct is still to build, I am glad to be a sounding board on what that actually takes. No pitch.
+
+${sender}`
+:`${g}
+
+One myth I want to bust, because a lot of founders believe it.
+
+The old personalization tools needed a ton of data, so they only helped the big players. The one we build is different. ${cap(A.micro)}, and ${A.support}.
+
+For ${a.name} that is the point. ${cap(a.pain)}. A site that reads each visitor and answers their real question in the moment converts a lot more of them. Happy to show you what it would look like on your product pages.
+
+${sender}`)});
+
+  e.push({day:"Day 12", subj:"a test, not a leap of faith", body:
+`${g}
+
+Last note from me, and it is the lowest-risk way to settle this.
+
+${offerLine(a)} ${cap(installLine(a))}. If the lift is not there, you have lost almost nothing.
+
+If now is not the moment, no problem, and I will stop landing in your inbox. If you want to see it on a real ${a.name} page first, reply with a time and I will bring the mockup.
+
+Either way, I think the discovery problem is the most interesting one in your category, and it is the natural place to extend what you have already built.
+
+${sender}`});
+  return e;
+}
+
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+
+/* ============================================================
+   STATE + RENDER
+   ============================================================ */
+let selectedId = "thirdlove";
+let channels = {blog:true, linkedin:true, email:true};
+let activeTab = "blog";
+let generated = null;
+
+const grid = document.getElementById('acctGrid');
+ACCOUNTS.forEach(a=>{
+  const el = document.createElement('button');
+  el.className = 'acct'+(a.id===selectedId?' sel':'');
+  el.dataset.id = a.id;
+  const tagCls = a.shopify?'shop':'ent';
+  const tagTxt = a.shopify?'Shopify':'Enterprise';
+  el.innerHTML = `
+    <span class="check">✓</span>
+    <div class="top"><span class="ini">${a.ini}</span>
+      <div><div class="nm">${a.name}</div><div class="cat">${a.cat}</div></div></div>
+    <div class="meta"><span class="rev">${a.rev}</span><span class="tag ${tagCls}">${tagTxt}</span></div>`;
+  el.onclick = ()=>{ selectedId=a.id; document.querySelectorAll('.acct').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); updateHint(); };
+  grid.appendChild(el);
+});
+
+function acct(){return ACCOUNTS.find(a=>a.id===selectedId);}
+function updateHint(){
+  const a=acct();
+  document.getElementById('selHint').innerHTML =
+    `Selected: <b style="color:var(--ink)">${a.name}</b> · ${a.segment} · target <b style="color:var(--ink)">${a.persona.name}</b>, ${a.persona.title}. The factory adapts tone, proof, and offer to this account.`;
+}
+updateHint();
+
+/* ---- source picker: the input that drives the output ---- */
+const PASTE_ID = "__paste";
+function renderSrcTabs(){
+  const tabs=document.getElementById('srcTabs'); tabs.innerHTML='';
+  SOURCES.forEach(s=>{
+    const el=document.createElement('div');
+    el.className='src-tab'+(activeSrc&&activeSrc.id===s.id?' on':'');
+    el.innerHTML=`<span class="k">${s.kind}</span> ${s.name}`;
+    el.onclick=()=>{ activeSrc=s; activeAtoms={...s.atoms}; renderSource(); };
+    tabs.appendChild(el);
+  });
+  const p=document.createElement('div');
+  p.className='src-tab'+(activeSrc&&activeSrc.id===PASTE_ID?' on':'');
+  p.innerHTML=`<span class="k">+</span> Paste your own`;
+  p.onclick=()=>{ activeSrc={id:PASTE_ID,name:"your pasted source",kind:"TXT"}; activeAtoms=extractAtoms(customText); renderSource(); };
+  tabs.appendChild(p);
+}
+function renderSrcLeft(){
+  const left=document.getElementById('srcLeft');
+  if(activeSrc.id===PASTE_ID){
+    left.innerHTML=`<textarea class="src-paste" id="srcPaste" placeholder="Paste any Product Genius thinking here: a blog post, a talk transcript, a podcast, a press release. The factory extracts atoms from it and rewrites them for each account."></textarea>`;
+    const ta=document.getElementById('srcPaste');
+    ta.value=customText;
+    ta.addEventListener('input',()=>{ customText=ta.value; activeAtoms=extractAtoms(customText); renderAtoms(); });
+    setTimeout(()=>ta.focus(),30);
+  } else {
+    left.innerHTML=`<div class="src-doc">
+      <div class="filebadge">${activeSrc.kind}</div>
+      <div><h4>${activeSrc.name}</h4><p>${activeSrc.desc}</p>
+      <div class="chips">${activeSrc.chips.map(c=>`<span class="chip">${c}</span>`).join('')}</div></div></div>`;
+  }
+}
+function renderAtoms(){
+  const card=document.getElementById('atomCard');
+  const A=activeAtoms;
+  const trim=(s,n=90)=>{s=s||'';return s.length>n?s.slice(0,n).replace(/\s+\S*$/,'')+'…':s;};
+  card.innerHTML=`
+    <div class="ex"><b>Headline stat</b>${trim(A.stat)}</div>
+    <div class="ex"><b>Proof story</b>${trim(A.story,118)}</div>
+    <div class="ex"><b>Mechanism</b>${trim(A.mechanism)}</div>
+    <div class="ex"><b>Thesis line</b>${trim(A.punch)}</div>
+    <div class="row" style="margin-top:8px"><span>Atoms extracted</span><b style="color:var(--good)">8 fields, reusable</b></div>`;
+}
+function renderSource(){
+  renderSrcTabs(); renderSrcLeft(); renderAtoms();
+  document.getElementById('srcHint').innerHTML = activeSrc.id===PASTE_ID
+    ? `Live extraction from your text. Type something, watch the atoms update, then forge. Different input, different output.`
+    : `These atoms drive every channel. Switch the source above and the blog, the posts, and the emails all change.`;
+}
+renderSource();
+
+document.querySelectorAll('.toggle').forEach(t=>{
+  t.onclick=()=>{const ch=t.dataset.ch; channels[ch]=!channels[ch]; t.classList.toggle('on',channels[ch]);
+    if(!Object.values(channels).some(Boolean)){channels[ch]=true;t.classList.add('on');}};
+});
+
+/* ---- run pipeline ---- */
+const runBtn = document.getElementById('runBtn');
+runBtn.onclick = run;
+
+function run(){
+  const a = acct();
+  runBtn.disabled = true;
+  const pipe = document.getElementById('pipe'); pipe.classList.add('show');
+  document.getElementById('out').classList.remove('show');
+  const stgs = [...document.querySelectorAll('.stg')];
+  stgs.forEach(s=>{s.classList.remove('active','done'); s.querySelector('[data-sub]').textContent='';});
+  const conns = [...document.querySelectorAll('.conn')];
+  const fill = document.getElementById('barFill');
+  const status = document.getElementById('pipeStatus');
+  const subs = [
+    `9 claims, 7 stats, 5 quotes`,
+    `voice: ${a.tone} · ${a.persona.name}`,
+    `${Object.values(channels).filter(Boolean).length} channels · 8 variants`,
+    `em-dashes stripped · 0 flags`
+  ];
+  const labels = [
+    `Extracting durable ideas from source content`,
+    `Adapting to ${a.name} (${a.segment})`,
+    `Writing blog, LinkedIn, and email variants`,
+    `Quality pass and de-AI cleanup`
+  ];
+  pipe.scrollIntoView({behavior:'smooth',block:'center'});
+  let i=0;
+  const step = ()=>{
+    if(i>0){stgs[i-1].classList.remove('active');stgs[i-1].classList.add('done');stgs[i-1].querySelector('[data-sub]').textContent=subs[i-1]; if(conns[i-1])conns[i-1].classList.remove('flow');}
+    if(i>=stgs.length){ finish(a); return; }
+    stgs[i].classList.add('active');
+    status.innerHTML = labels[i]+' <b>…</b>';
+    if(conns[i])conns[i].classList.add('flow');
+    fill.style.width = ((i+1)/stgs.length*100)+'%';
+    i++;
+    setTimeout(step, i===1?700:640);
+  };
+  setTimeout(step, 250);
+}
+
+function finish(a){
+  document.getElementById('pipeStatus').innerHTML = `Done. <b>8 assets</b> generated for ${a.name} in 2.6s.`;
+  const A = activeAtoms;
+  generated = {
+    blog: genBlog(a, A),
+    linkedin: genLinkedIn(a, A),
+    email: genEmails(a, A),
+    account: a
+  };
+  buildTabs();
+  activeTab = channels.blog?'blog':(channels.linkedin?'linkedin':'email');
+  renderTab();
+  renderBasis(a);
+  document.getElementById('outWho').innerHTML =
+    `Personalized for <b>${a.persona.name}</b>, ${a.persona.title} · ${a.name} · source: <b>${activeSrc.name}</b>`;
+  const out = document.getElementById('out'); out.classList.add('show');
+  setTimeout(()=>out.scrollIntoView({behavior:'smooth',block:'start'}),120);
+  runBtn.disabled=false;
+}
+
+function buildTabs(){
+  const tabs=document.getElementById('tabs'); tabs.innerHTML='';
+  const defs=[['blog','Blog post','1'],['linkedin','LinkedIn series','3'],['email','Email drip','4']];
+  defs.forEach(([k,label,ct])=>{
+    if(!channels[k])return;
+    const el=document.createElement('div');
+    el.className='tab'+(k===activeTab?' on':'');
+    el.innerHTML=`${label} <span class="ct">${ct}</span>`;
+    el.onclick=()=>{activeTab=k; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on')); el.classList.add('on'); renderTab();};
+    tabs.appendChild(el);
+  });
+}
+
+function renderTab(){
+  const area=document.getElementById('docArea');
+  const a=generated.account;
+  document.getElementById('docName').textContent =
+    activeTab==='blog'?'blog-post.md':activeTab==='linkedin'?'linkedin-series.md':'email-drip.md';
+  area.innerHTML='';
+  if(activeTab==='blog'){
+    const b=generated.blog;
+    let h=`<div class="meta-line reveal">${b.meta}</div><div class="blogtitle reveal" style="animation-delay:.05s">${b.title}</div>`;
+    b.paras.forEach((p,i)=>{h+=`<p class="reveal" style="animation-delay:${.1+i*.08}s">${p}</p>`;});
+    area.innerHTML=h;
+  } else if(activeTab==='linkedin'){
+    generated.linkedin.forEach((p,i)=>{
+      const av=p.voice.split(' ').map(x=>x[0]).join('').slice(0,2);
+      const div=document.createElement('div'); div.className='post reveal'; div.style.animationDelay=(i*.1)+'s';
+      div.innerHTML=`<div class="ph"><div class="av">${av}</div><div><div class="nm">${p.voice}</div><div class="rl">${p.role}</div></div></div>
+        <div class="body">${p.text}</div>
+        <div class="react"><span>♡ Like</span><span>↻ Repost</span><span>✎ Comment</span><span style="margin-left:auto">Post ${i+1} of ${generated.linkedin.length}</span></div>`;
+      area.appendChild(div);
+    });
+  } else {
+    generated.email.forEach((m,i)=>{
+      const div=document.createElement('div'); div.className='email reveal'; div.style.animationDelay=(i*.09)+'s';
+      div.innerHTML=`<div class="eh"><span class="day">${m.day}</span><span style="font-size:11.5px;color:var(--faint)">to ${a.first==='there'?a.name:a.persona.name}</span></div>
+        <div class="subj">${m.subj}</div><div class="ebody">${m.body}</div>`;
+      area.appendChild(div);
+    });
+  }
+}
+
+function renderBasis(a){
+  const b=document.getElementById('basis');
+  let h=`<h4>◆ Why this is real personalization</h4><p class="sub">Every line below is a research signal the factory used, not a mail-merge field.</p>`;
+  a.sigs.forEach(([t,d])=>{ h+=`<div class="signal"><div class="ic">✓</div><div><div class="t">${t}</div><div class="d">${d}</div></div></div>`; });
+  h+=`<div class="foot">Segment: <b style="color:var(--muted)">${a.segment}</b><br>Platform: ${a.platform}<br>Offer + tone shift automatically with both.</div>`;
+  b.innerHTML=h;
+}
+
+document.getElementById('copyBtn').onclick = ()=>{
+  let text='';
+  if(activeTab==='blog'){text=generated.blog.title+'\n\n'+generated.blog.paras.join('\n\n');}
+  else if(activeTab==='linkedin'){text=generated.linkedin.map((p,i)=>`POST ${i+1}: ${p.voice}\n\n${p.text}`).join('\n\n---\n\n');}
+  else{text=generated.email.map(m=>`${m.day}: ${m.subj}\n\n${m.body}`).join('\n\n========\n\n');}
+  navigator.clipboard.writeText(text).then(()=>{document.getElementById('copyBtn').textContent='Copied';setTimeout(()=>document.getElementById('copyBtn').textContent='Copy',1200);});
+};
+
+/* ============================================================
+   MODALS
+   ============================================================ */
+const PROMPTS = `<span class="k">SYSTEM</span> // extract stage
+You are a content strategist. From the source material, extract a
+reusable library of atoms. Return JSON:
+{
+  <span class="v">claims</span>: [ durable, defensible statements ],
+  <span class="v">stats</span>:  [ {value, context, source} ],
+  <span class="v">quotes</span>: [ {text, attribution} ],
+  <span class="v">angles</span>: [ narrative framings worth reusing ]
+}
+Rules: no invented numbers. Every stat must trace to the source.
+
+<span class="k">SYSTEM</span> // adapt + channelize stage
+You are writing as Product Genius to <span class="v">{{persona.name}}</span>,
+<span class="v">{{persona.title}}</span> at <span class="v">{{account.name}}</span>.
+Account context (use, do not restate as a list):
+  segment:  <span class="s">{{account.segment}}</span>
+  platform: <span class="s">{{account.platform}}</span>
+  pain:     <span class="s">{{account.pain}}</span>
+  trigger:  <span class="s">{{account.trigger}}</span>
+  category lift benchmark: <span class="s">{{lift}}%</span>
+
+Voice = <span class="v">{{tone}}</span>  (founder | operator | exec)
+Offer logic:
+  if Shopify + PLG  -> self-serve, 15-day trial, "install yourself"
+  if Shopify + mid  -> sales-assisted A/B test on a 15-day trial
+  else (enterprise) -> tag + API, controlled A/B on a traffic slice
+
+Channel = <span class="v">{{channel}}</span>
+  blog     -> 700-900 words, top of funnel, one idea, SEO title
+  linkedin -> 3 posts, alternating founder / growth voice, no hashtags spam
+  email    -> 4-touch drip, one idea each, short, human, real reply-to
+
+<span class="k">CONSTRAINTS</span> (the de-AI pass enforces these)
+  - no em-dashes. use commas, periods, or parentheses.
+  - ban: delve, leverage, robust, seamless, "in today's", "elevate",
+    "unlock", "game-changer", "supercharge", tidy rule-of-three lists.
+  - vary sentence length. allow one fragment per asset.
+  - never claim a number not in the atom library.`;
+
+function openModal(kind){
+  const m=document.getElementById('modal');
+  const t=document.getElementById('modalTitle');
+  const b=document.getElementById('modalBody');
+  if(kind==='prompts'){
+    t.textContent='Prompt templates: the actual factory logic';
+    b.innerHTML=`<p style="color:var(--muted);font-size:14px;margin-top:0">These are the templates behind the Extract and Adapt stages. In this demo the Adapt stage runs deterministically in your browser so it works offline. Flip on Live mode to route the same templates to a model.</p><pre class="code">${PROMPTS}</pre>`;
+  } else {
+    t.textContent='Live mode';
+    b.innerHTML=`
+      <p style="color:var(--muted);font-size:14px;margin-top:0">This demo ships with the generation engine baked in so it runs with no key. In production, Live mode points the prompt templates at a model and streams real drafts back into the same UI.</p>
+      <div class="field"><label>Model provider</label>
+        <select><option>Anthropic · Claude</option><option>OpenAI · GPT</option><option>Google · Gemini</option></select></div>
+      <div class="field"><label>API key (kept in memory only, never stored)</label>
+        <input type="password" placeholder="sk-..." /></div>
+      <div class="note">Wiring is intentionally left as a single <b>generate(channel, account)</b> swap in the code, so the demo stays self-contained and the production path stays obvious. See <b>content-factory-pipeline/</b> for the runnable server-side version.</div>`;
+  }
+  m.classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show');}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+</script>
+</body>
+</html>

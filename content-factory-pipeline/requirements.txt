@@ -1,0 +1,3 @@
+# The factory runs offline with zero dependencies (standard library only).
+# Install this only if you want --live model generation.
+anthropic>=0.39.0
